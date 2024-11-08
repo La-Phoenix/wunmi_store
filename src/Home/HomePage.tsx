@@ -1,61 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShoppingCart, Heart, Search, Menu, X, User } from 'lucide-react';
 import "./HomePage.css";
+import { useAuth } from '../Route/Route';
+import axios from 'axios';
+import { API_BASE_URL } from '../Auth/Auth';
+import accessories from "../assets/imgs/martin-de-arriba-uf_IDewI6iQ-unsplash-min.jpg";
+import clothes from "../assets/imgs/junko-nakase-Q-72wa9-7Dg-unsplash.jpg";
+import elctronics from "../assets/imgs/josh-calabrese-mZf9BZxyKZE-unsplash.jpg";
+import bags from "../assets/imgs/arno-senoner-iUvQRvdIhsY-unsplash.jpg";
+import shoes from "../assets/imgs/jaclyn-moy-ugZxwLQuZec-unsplash.jpg";
 
-const categories = {
-  Accessories: [
+const categories = [
     {
       id: 1,
-      name: "Leather Backpack",
+      name: "Accessories",
       price: 79.99,
-      image: "/api/placeholder/300/300",
+      image: accessories,
     },
-    {
-      id: 5,
-      name: "Sunglasses",
-      price: 49.99,
-      image: "/api/placeholder/300/300",
-    },
-  ],
-  Electronics: [
     {
       id: 2,
-      name: "Wireless Headphones",
+      name: "Clothes",
       price: 129.99,
-      image: "/api/placeholder/300/300",
+      image: clothes,
     },
     {
       id: 4,
-      name: "Smart Watch",
+      name: "Electronics",
       price: 199.99,
-      image: "/api/placeholder/300/300",
+      image: elctronics,
     },
-  ],
-  Sports: [
     {
       id: 3,
-      name: "Running Shoes",
+      name: "Shoes",
       price: 89.99,
-      image: "/api/placeholder/300/300",
+      image: shoes,
     },
-  ],
-  Clothing: [
     {
-      id: 6,
-      name: "Denim Jacket",
-      price: 69.99,
-      image: "/api/placeholder/300/300",
+      id: 5,
+      name: "Bags",
+      price: 89.99,
+      image: bags,
     },
-  ],
-};
+];
 
 
 interface Product {
   id: number;
-  name: string;
+  title: string;
   price: number;
-  image: string;
-  category: string;
+  images: string[];
+  category: { name: string }
 }
 
 interface NavLinkProps {
@@ -92,13 +86,13 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
     <img
-      src={product.image}
-      alt={product.name}
+      src={product.images[0]}
+      alt={product.title}
       className="w-full h-64 object-cover"
     />
     <div className="p-4">
-      <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-      <p className="text-gray-600 text-sm mb-2">{product.category}</p>
+      <h3 className="text-lg font-semibold text-gray-900">{product.title}</h3>
+      <p className="text-gray-600 text-sm mb-2">{product.category.name}</p>
       <div className="flex justify-between items-center">
         <span className="text-lg font-bold text-gray-900">${product.price}</span>
         <button 
@@ -112,58 +106,87 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => (
   </div>
 );
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Leather Backpack",
-    price: 79.99,
-    image: "/api/placeholder/300/300",
-    category: "Accessories"
-  },
-  {
-    id: 2,
-    name: "Wireless Headphones",
-    price: 129.99,
-    image: "/api/placeholder/300/300",
-    category: "Electronics"
-  },
-  {
-    id: 3,
-    name: "Running Shoes",
-    price: 89.99,
-    image: "/api/placeholder/300/300",
-    category: "Sports"
-  },
-  {
-    id: 4,
-    name: "Smart Watch",
-    price: 199.99,
-    image: "/api/placeholder/300/300",
-    category: "Electronics"
-  },
-  {
-    id: 5,
-    name: "Sunglasses",
-    price: 49.99,
-    image: "/api/placeholder/300/300",
-    category: "Accessories"
-  },
-  {
-    id: 6,
-    name: "Denim Jacket",
-    price: 69.99,
-    image: "/api/placeholder/300/300",
-    category: "Clothing"
-  }
-];
+// const products: Product[] = [
+//   {
+//     id: 1,
+//     name: "Leather Backpack",
+//     price: 79.99,
+//     image: "/api/placeholder/300/300",
+//     category: "Accessories"
+//   },
+//   {
+//     id: 2,
+//     name: "Wireless Headphones",
+//     price: 129.99,
+//     image: "/api/placeholder/300/300",
+//     category: "Electronics"
+//   },
+//   {
+//     id: 3,
+//     name: "Running Shoes",
+//     price: 89.99,
+//     image: "/api/placeholder/300/300",
+//     category: "Sports"
+//   },
+//   {
+//     id: 4,
+//     name: "Smart Watch",
+//     price: 199.99,
+//     image: "/api/placeholder/300/300",
+//     category: "Electronics"
+//   },
+//   {
+//     id: 5,
+//     name: "Sunglasses",
+//     price: 49.99,
+//     image: "/api/placeholder/300/300",
+//     category: "Accessories"
+//   },
+//   {
+//     id: 6,
+//     name: "Denim Jacket",
+//     price: 69.99,
+//     image: "/api/placeholder/300/300",
+//     category: "Clothing"
+//   }
+// ];
 
 const HomePage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
+  const [open, setOpen] = useState(false);
+  
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const {isLoggedIn, logout, setIsLoading } = useAuth()
 
   const handleAddToCart = (productId: number): void => {
     // Implementation for adding to cart
     console.log(`Added product ${productId} to cart`);
+  };
+
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get<Product[]>(`${API_BASE_URL}/products`);
+        console.log(response.data[0]);
+        setProducts(response.data);
+      } catch (error) {
+        console.log(error)
+        setError('Failed to load products');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [API_BASE_URL]);
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setOpen(!open);
   };
 
   const handleSubscribe = (e: React.FormEvent): void => {
@@ -190,7 +213,7 @@ const HomePage: React.FC = () => {
               <NavLink href="#">Shop</NavLink>
               <NavLink href="#">Categories</NavLink>
               <NavLink href="#">About</NavLink>
-              <NavLink href="/auth">Login</NavLink>
+             { !isLoggedIn && <NavLink href="/auth">Login</NavLink>}
             </div>
 
             {/* Icons */}
@@ -204,9 +227,23 @@ const HomePage: React.FC = () => {
               <IconButton>
                 <ShoppingCart size={20} />
               </IconButton>
-              <IconButton>
-                <User size={20} />
-              </IconButton>
+              <div className="dropdown-container">
+                {/* IconButton triggers dropdown toggle */}
+                <IconButton onClick={toggleDropdown}>
+                  <User size={20} />
+                </IconButton>
+
+                {/* Dropdown menu */}
+                {open && (
+                  <div className="dropdown-menu">
+                    <ul>
+                      <li>Profile</li>
+                      <li>Settings</li>
+                      {isLoggedIn && <li onClick={() => logout()}>Logout</li>}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Mobile menu button */}
@@ -234,6 +271,7 @@ const HomePage: React.FC = () => {
               <NavLink href="#" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
                 About
               </NavLink>
+              { !isLoggedIn && <NavLink href="/auth">Login</NavLink>}
             </div>
           </div>
         )}
@@ -261,9 +299,14 @@ const HomePage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-32">
         <h2 className="text-2xl font-bold text-gray-900 mb-8">Shop by Category</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Object.keys(categories).map((category) => (
-            <div key={category} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow py-12">
-              <h3 className="text-lg font-semibold text-gray-900 p-4">{category}</h3>
+          {categories.map((category) => (
+            <div key={category.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow py-12">
+              <h3 className="text-lg font-semibold text-gray-900 p-4">{category.name}</h3>
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-full h-64 object-cover"
+              />
               <NavLink href={`/category/${category}`} className="block px-4 py-2 text-blue-600 hover:text-blue-700">
                 View Products
               </NavLink>

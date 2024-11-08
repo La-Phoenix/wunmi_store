@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Auth from '../Auth/Auth';
+import Auth, { FormData } from '../Auth/Auth';
 import HomePage from '../Home/HomePage';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 // Import your components
 interface User {
@@ -14,8 +17,10 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (endpoint: string, payload: FormData) => Promise<unknown>;
+  isLoggedIn: boolean;
   logout: () => void;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
 }
 
@@ -25,58 +30,67 @@ const AuthContext = React.createContext<AuthContextType | null>(null);
 // Auth Provider Component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check for stored auth token and validate it
-    const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          // Validate token with your backend
-          // const userData = await validateToken(token);
-          // setUser(userData);
-          setUser({ id: '1', name: 'Test User', email: 'test@example.com', role: 'buyer' }); // Mock user
-        } catch (error) {
-          localStorage.removeItem('token');
-        }
-      }
-      setIsLoading(false);
-    };
-
-    checkAuth();
-  }, []);
-
-  const login = async (email: string, password: string) => {
+  
+  const login = async (endpoint: string, payload: FormData) => {
     try {
       setIsLoading(true);
-      // Implement actual login API call here
-      // const response = await loginAPI(email, password);
-      // const { user, token } = response;
-      
-      // Mock successful login
-      const mockUser = { id: '1', name: 'Test User', email, role: 'buyer' as const };
-      const mockToken = 'mock-token';
-      
-      localStorage.setItem('token', mockToken);
-      setUser(mockUser);
-      navigate('/dashboard');
+      const response = await axios.post(endpoint, payload);
+      setIsLoggedIn(true)
+      navigate('/');
     } catch (error) {
-      throw new Error('Login failed');
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    // Check if the JWT is stored in cookies and decode it to get user info
+    const token = Cookies.get('token');
+    setToken(token)
+    console.log('token', token)
+    if (token) {
+      try {
+        setIsLoggedIn(true);
+        const decodedToken = jwtDecode(token);  // Decode the JWT
+        console.log(decodedToken)
+        const currentTime = Date.now() / 1000;
+        
+        console.log(decodedToken)
+        console.log(currentTime)
+
+        // Check if the token is expired
+        if (decodedToken.exp && decodedToken.exp < currentTime) {
+          logout(); // Log the user out if token is expired
+        }
+        // setUser({
+        //   id: decodedToken.userId,
+        //   name: decodedToken.name,
+        //   email: decodedToken.email,
+        //   role: decodedToken.role,
+        // });
+      } catch (error) {
+        console.error('Error decoding JWT', error);
+      }
+    }
+    setIsLoading(false);
+  }, [login]);
+
   const logout = () => {
-    localStorage.removeItem('token');
+    console.log(Cookies.get('token'))
+    Cookies.remove('token');  // Remove JWT 
+    console.log(Cookies.get('token'))
+    setIsLoggedIn(false);
     setUser(null);
-    navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading}}>
       {children}
     </AuthContext.Provider>
   );
@@ -100,18 +114,19 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
+  const {isLoggedIn} = useAuth();
 
   if (isLoading) {
     return <div>Loading...</div>; // Replace with your loading component
   }
 
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!isLoggedIn) {
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  if (roles && !roles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+  // if (roles && !roles.includes(use.role)) {
+  //   return <Navigate to="/unauthorized" replace />;
+  // }
 
   return <>{children}</>;
 };
@@ -152,6 +167,18 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   );
 };
 
+// Define the props type for RedirectRoute
+interface RedirectRouteProps {
+  element: React.ReactElement;
+  redirectPath: string;
+}
+
+// RedirectRoute Component to handle redirection for authenticated users
+const RedirectRoute: React.FC<RedirectRouteProps>= ({ element, redirectPath }) => {
+  const { isLoggedIn } = useAuth(); // Access the user from context
+  return isLoggedIn ? <Navigate to={redirectPath} replace /> : element;
+};
+
 // App Routes
 const AppRoutes: React.FC = () => {
   return (
@@ -160,9 +187,13 @@ const AppRoutes: React.FC = () => {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/auth" element={<Auth />} />
           <Route path="/products" element={<MainLayout><ProductListPage /></MainLayout>} />
           
+          {/* Redirect to homepage if logged in */}
+          <Route
+            path="/auth"
+            element={<RedirectRoute element={<Auth />} redirectPath="/" />}
+          />
           {/* Protected routes - Buyer */}
           <Route 
             path="/dashboard"
