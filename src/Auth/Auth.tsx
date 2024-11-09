@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import "./Auth.css"
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useAuth } from '../Route/Route';
-
-const clientId = import.meta.env.VITE_google_client_id!;
-const clientSecret = import.meta.env.VITE_google_client_secret;
 export const API_BASE_URL = 'http://localhost:3000/api/v1';
 
 export interface FormData {
@@ -84,21 +79,10 @@ const Auth: React.FC = () => {
   const handleSuccess = async () => {
     setGoogleLogin(true);
         // Redirect to backend OAuth endpoint
-      window.location.href = `${API_BASE_URL}auth/google`;
+      window.location.href = `${API_BASE_URL}/auth/google`;
   };
 
-  
 
-  useEffect(() => {
-    // Check if this is a OAuth callback
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    
-    if (token) {
-      console.log(token)
-      // window.location.href = 'http://localhost:3000/api/v1/auth/google';
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

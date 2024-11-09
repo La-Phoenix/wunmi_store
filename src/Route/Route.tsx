@@ -6,6 +6,7 @@ import HomePage from '../Home/HomePage';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+import UploadProductPage from '../UploadProduct/UploadProduct';
 
 // Import your components
 interface User {
@@ -22,6 +23,7 @@ interface AuthContextType {
   logout: () => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
+  token: string | undefined;
 }
 
 // Create AuthContext
@@ -53,16 +55,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check if the JWT is stored in cookies and decode it to get user info
     const token = Cookies.get('token');
     setToken(token)
-    console.log('token', token)
     if (token) {
       try {
         setIsLoggedIn(true);
         const decodedToken = jwtDecode(token);  // Decode the JWT
-        console.log(decodedToken)
         const currentTime = Date.now() / 1000;
-        
-        console.log(decodedToken)
-        console.log(currentTime)
 
         // Check if the token is expired
         if (decodedToken.exp && decodedToken.exp < currentTime) {
@@ -90,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading}}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading, token}}>
       {children}
     </AuthContext.Provider>
   );
@@ -196,12 +193,13 @@ const AppRoutes: React.FC = () => {
           />
           {/* Protected routes - Buyer */}
           <Route 
-            path="/dashboard"
+            path="/upload-product"
             element={
               <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
-                <DashboardLayout>
+                <UploadProductPage/>
+                {/* <DashboardLayout>
                   <DashboardPage />
-                </DashboardLayout>
+                </DashboardLayout> */}
               </ProtectedRoute>
             }
           />

@@ -9,6 +9,7 @@ import clothes from "../assets/imgs/junko-nakase-Q-72wa9-7Dg-unsplash.jpg";
 import elctronics from "../assets/imgs/josh-calabrese-mZf9BZxyKZE-unsplash.jpg";
 import bags from "../assets/imgs/arno-senoner-iUvQRvdIhsY-unsplash.jpg";
 import shoes from "../assets/imgs/jaclyn-moy-ugZxwLQuZec-unsplash.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
     {
@@ -160,6 +161,7 @@ const HomePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const {isLoggedIn, logout, setIsLoading } = useAuth()
+  const navigate = useNavigate();
 
   const handleAddToCart = (productId: number): void => {
     // Implementation for adding to cart
@@ -238,6 +240,7 @@ const HomePage: React.FC = () => {
                   <div className="dropdown-menu">
                     <ul>
                       <li>Profile</li>
+                      {isLoggedIn && <li onClick={() => navigate('/upload-product')}>Upload Product</li>}
                       <li>Settings</li>
                       {isLoggedIn && <li onClick={() => logout()}>Logout</li>}
                     </ul>
@@ -271,6 +274,9 @@ const HomePage: React.FC = () => {
               <NavLink href="#" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
                 About
               </NavLink>
+              {isLoggedIn && <NavLink href="upload-product" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+                Upload Product
+              </NavLink>}
               { !isLoggedIn && <NavLink href="/auth">Login</NavLink>}
             </div>
           </div>
