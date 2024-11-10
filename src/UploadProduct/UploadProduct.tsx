@@ -15,6 +15,7 @@ const UploadProductPage: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
   const { token } = useAuth();
+  const [isUploading, setIsUploading] = useState(false);
 
   // Validate the form fields
   const validateForm = (): boolean => {
@@ -42,6 +43,7 @@ const UploadProductPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      setIsUploading(true);
       const formData = new FormData();
       formData.append('name', productName);
       formData.append('price', price);
@@ -54,10 +56,12 @@ const UploadProductPage: React.FC = () => {
         });
         console.log(response.data);
         setMessage('Product uploaded successfully!');
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/profile'), 2000);
+        setIsUploading(false);
       } catch (error) {
         console.error(error);
         setMessage('Failed to upload product.');
+        setIsUploading(false);
       }
     }
   };
@@ -135,11 +139,16 @@ const UploadProductPage: React.FC = () => {
 
           {/* Submit Button */}
           <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Upload Product
-          </button>
+              type="submit"
+              className={`w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center`}
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <div className="button-loader"></div>
+              ) : (
+                "Upload Product"
+              )}
+            </button>
           <button
             type="button"
             onClick={() => navigate('/')}

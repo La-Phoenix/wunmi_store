@@ -1,20 +1,21 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Auth, { FormData } from '../Auth/Auth';
+import Auth, { API_BASE_URL, FormData } from '../Auth/Auth';
 import HomePage from '../Home/HomePage';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import UploadProductPage from '../UploadProduct/UploadProduct';
+import ProfilePage, { User } from '../Profile/ProfilePage';
 
 // Import your components
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'buyer' | 'seller' | 'admin';
-}
+// interface User {
+//   id: string;
+//   name: string;
+//   email: string;
+//   role: 'buyer' | 'seller' | 'admin';
+// }
 
 interface AuthContextType {
   user: User | null;
@@ -22,6 +23,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   logout: () => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setUser: Dispatch<SetStateAction<User | null>>;
   isLoading: boolean;
   token: string | undefined;
 }
@@ -52,31 +54,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // Check if the JWT is stored in cookies and decode it to get user info
-    const token = Cookies.get('token');
-    setToken(token)
-    if (token) {
-      try {
-        setIsLoggedIn(true);
-        const decodedToken = jwtDecode(token);  // Decode the JWT
-        const currentTime = Date.now() / 1000;
+    const fetchUserData = async () => {
+      const token = Cookies.get('token');
+      if (token) {
+        setToken(token);
+        try {
+          setIsLoggedIn(true);
 
-        // Check if the token is expired
-        if (decodedToken.exp && decodedToken.exp < currentTime) {
-          logout(); // Log the user out if token is expired
+          // Decode the JWT to get user information
+          const decodedToken = jwtDecode(token);
+          const currentTime = Date.now() / 1000;
+
+          
+          // Check if the token is expired
+          if (decodedToken.exp && decodedToken.exp < currentTime) {
+            logout(); // Log the user out if token is expired
+            return;
+          }
+          if(decodedToken) {
+            console.log(decodedToken)
+            setUser(decodedToken as User);
+          }
+
+        } catch (error) {
+          console.error('Error fetching user data', error);
         }
-        // setUser({
-        //   id: decodedToken.userId,
-        //   name: decodedToken.name,
-        //   email: decodedToken.email,
-        //   role: decodedToken.role,
-        // });
-      } catch (error) {
-        console.error('Error decoding JWT', error);
       }
-    }
-    setIsLoading(false);
-  }, [login]);
+      setIsLoading(false);
+    };
+
+    fetchUserData();
+  }, [isLoggedIn]);
 
   const logout = () => {
     console.log(Cookies.get('token'))
@@ -87,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading, token}}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading, token, setUser}}>
       {children}
     </AuthContext.Provider>
   );
@@ -207,9 +215,7 @@ const AppRoutes: React.FC = () => {
             path="/profile"
             element={
               <ProtectedRoute>
-                <DashboardLayout>
                   <ProfilePage />
-                </DashboardLayout>
               </ProtectedRoute>
             }
           />
@@ -275,7 +281,6 @@ const AppRoutes: React.FC = () => {
 // Placeholder components (replace with your actual components)
 const ProductListPage: React.FC = () => <div>Product List Page</div>;
 const DashboardPage: React.FC = () => <div>Dashboard Page</div>;
-const ProfilePage: React.FC = () => <div>Profile Page</div>;
 const OrdersPage: React.FC = () => <div>Orders Page</div>;
 const SellerProductsPage: React.FC = () => <div>Seller Products Page</div>;
 const SellerOrdersPage: React.FC = () => <div>Seller Orders Page</div>;

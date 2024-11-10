@@ -239,7 +239,7 @@ const HomePage: React.FC = () => {
                 {open && (
                   <div className="dropdown-menu">
                     <ul>
-                      <li>Profile</li>
+                      {isLoggedIn && <li onClick={() => navigate('/profile')}>Profile</li>}
                       {isLoggedIn && <li onClick={() => navigate('/upload-product')}>Upload Product</li>}
                       <li>Settings</li>
                       {isLoggedIn && <li onClick={() => logout()}>Logout</li>}
