@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import UploadProductPage from '../UploadProduct/UploadProduct';
 import ProfilePage, { User } from '../Profile/ProfilePage';
+import CategoryPage from '../Categories/CategoriesPage';
 
 // Import your components
 // interface User {
@@ -205,9 +206,6 @@ const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
                 <UploadProductPage/>
-                {/* <DashboardLayout>
-                  <DashboardPage />
-                </DashboardLayout> */}
               </ProtectedRoute>
             }
           />
@@ -216,6 +214,14 @@ const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute>
                   <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/category/:categoryName"
+            element={
+              <ProtectedRoute>
+                  <CategoryPage />
               </ProtectedRoute>
             }
           />

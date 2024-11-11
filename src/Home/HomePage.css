@@ -59,3 +59,114 @@
 .dropdown-menu {
   animation: fadeIn 0.3s ease-out;
 }
+
+
+/* Global theme styles */
+:root {
+  --bg-color: #f7fafc;
+  --text-color: #2d3748;
+  --button-bg: #3182ce;
+  --button-text: #ffffff;
+}
+
+[data-theme="dark"] {
+  --bg-color: #2d3748;
+  --text-color: #f7fafc;
+  --button-bg: #63b3ed;
+  --button-text: #1a202c;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.theme-button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+}
+
+
+/* HomePage.css */
+body.dark {
+  background-color: #1a202c; /* Darker background */
+  color: #f7fafc; /* Light text */
+}
+
+/* Dark mode-specific styles */
+.dark .hero {
+  background-color: #2d3748; /* Darker gray for hero section */
+}
+
+.dark .product-card, .dark .category-card {
+  background-color: #2d3748;
+  color: #f7fafc;
+}
+
+.product-card, .category-card {
+  background-color: white;
+  color: #2d3748;
+}
+
+/* HomePage.css */
+
+/* Global Styles for Light & Dark Themes */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Mode */
+body.dark {
+  background-color: #1a202c;
+  color: #f7fafc;
+}
+
+.bg-gray-50 {
+  background-color: #f9fafb; /* Light Mode Background */
+}
+
+.bg-gray-800 {
+  background-color: #2d3748; /* Dark Mode Background */
+}
+
+.bg-gray-900 {
+  background-color: #1a202c; /* Dark Mode Background */
+}
+
+.text-gray-900 {
+  color: #2d3748; /* Light Mode Text */
+}
+
+.text-gray-600 {
+  color: #718096; /* Light Mode Text */
+}
+
+.text-white {
+  color: #fff; /* Dark Mode Text */
+}
+
+/* Smooth Hover Effects */
+button:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Products Section */
+.card-dark {
+  background-color: #2d3748; /* Dark Mode Product Card */
+  color: #fff;
+}
+
+.card-light {
+  background-color: #fff; /* Light Mode Product Card */
+  color: #2d3748;
+}
+
+/* Custom Button Styling */
+button.bg-blue-600 {
+  background-color: #3182ce;
+}
+
+button.bg-blue-600:hover {
+  background-color: #63b3ed;
+}

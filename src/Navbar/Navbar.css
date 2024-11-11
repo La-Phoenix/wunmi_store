@@ -1,0 +1,41 @@
+/* Base Logo Styling */
+.logo {
+  display: flex;
+  align-items: center;
+  font-family: cursive, serif;
+  font-size: 2.5rem;
+  color: #333;
+  letter-spacing: 0.02em;
+}
+
+/* Primary Text ("Wunmi") */
+.logo-primary {
+  font-weight: 800;
+  background: linear-gradient(135deg, #8b5cf6, #584c52); /* Gradient for a luxurious effect */
+  -webkit-background-clip: text;
+  color: transparent;
+  position: relative;
+}
+
+/* 3D Shadow Effect on Primary Text */
+.logo-primary::before {
+  content: 'Wunmi';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  color: rgba(0, 0, 0, 0.15); /* Subtle shadow */
+  z-index: -1;
+}
+
+/* Secondary Text ("store") */
+.logo-secondary {
+  font-weight: 700;
+  font-size: 0.6em;
+  color: #6b7280; /* Soft gray for contrast */
+  text-transform: lowercase;
+  letter-spacing: 0.15em;
+  margin-left: 0.3em;
+  align-self: flex-end; /* Align slightly lower for a balanced look */
+  opacity: 0.9; /* Slightly muted */
+}
+
