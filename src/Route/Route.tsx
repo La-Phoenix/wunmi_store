@@ -9,6 +9,8 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
 import UploadProductPage from '../UploadProduct/UploadProduct';
 import ProfilePage, { User } from '../Profile/ProfilePage';
 import CategoryPage from '../Categories/CategoriesPage';
+import ResetPassword from '../Forgot-Password/Reset-Password';
+import ForgotPassword from '../Forgot-Password/Forgot-Password';
 
 // Import your components
 // interface User {
@@ -194,6 +196,8 @@ const AppRoutes: React.FC = () => {
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<MainLayout><ProductListPage /></MainLayout>} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           
           {/* Redirect to homepage if logged in */}
           <Route

@@ -265,6 +265,7 @@ const Auth: React.FC = () => {
               <button
                 type="button"
                 className="text-sm text-blue-600 hover:text-blue-500"
+                onClick={() => navigate('/forgot-password')}
               >
                 Forgot your password?
               </button>
