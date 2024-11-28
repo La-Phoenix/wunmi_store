@@ -33,7 +33,7 @@ const ForgotPasswordPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Forgot Password</h1>
         {success ? (
           <div className="text-green-600 text-center">
-            <p>If your email exists, a password reset link has been sent.</p>
+            <p>A password reset link has been sent.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">

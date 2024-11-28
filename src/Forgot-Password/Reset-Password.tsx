@@ -37,13 +37,13 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 auth">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h1 className="text-2xl font-semibold text-center text-gray-800 mb-6">Reset Password</h1>
         {success ? (
           <div className="text-green-600 text-center">
             <p>Your password has been reset successfully.</p>
-            <a href="/login" className="text-blue-600 underline mt-4 block">Go to Login</a>
+            <a href="/auth" className="text-blue-600 underline mt-4 block">Go to Login</a>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
