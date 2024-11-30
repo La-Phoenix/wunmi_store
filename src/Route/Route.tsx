@@ -1,16 +1,18 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Auth, { API_BASE_URL, FormData } from '../Auth/Auth';
+import Auth, { FormData } from '../Auth/Auth';
 import HomePage from '../Home/HomePage';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import UploadProductPage from '../UploadProduct/UploadProduct';
 import ProfilePage, { User } from '../Profile/ProfilePage';
 import CategoryPage from '../Categories/CategoriesPage';
 import ResetPassword from '../Forgot-Password/Reset-Password';
 import ForgotPassword from '../Forgot-Password/Forgot-Password';
+import ChatPage from '../Chat/Chat';
+import ChatsPage from '../ChatsPage/chatPage';
 
 // Import your components
 // interface User {
@@ -187,6 +189,16 @@ const RedirectRoute: React.FC<RedirectRouteProps>= ({ element, redirectPath }) =
   return isLoggedIn ? <Navigate to={redirectPath} replace /> : element;
 };
 
+
+const ChatPageWrapper: React.FC = () => {
+  const { senderId, receiverId } = useParams();
+  console.log(senderId)
+  console.log(receiverId)
+  if (!senderId || !receiverId) return <div>Error: Missing parameters</div>;
+
+  return <ChatPage senderId={senderId} receiverId={receiverId} />;
+};
+
 // App Routes
 const AppRoutes: React.FC = () => {
   return (
@@ -210,6 +222,24 @@ const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
                 <UploadProductPage/>
+              </ProtectedRoute>
+            }
+          />
+          {/* Protected routes - Buyer */}
+          <Route 
+            path="/chats"
+            element={
+              <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
+                <ChatsPage/>
+              </ProtectedRoute>
+            }
+          />
+          {/* Protected routes - Buyer */}
+          <Route 
+            path="/chat/:senderId/:receiverId"
+            element={
+              <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
+                <ChatPageWrapper/>
               </ProtectedRoute>
             }
           />

@@ -104,6 +104,7 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; }> = ({ 
                   <ul>
                     {isLoggedIn && <li onClick={() => navigate("/profile")}>Profile</li>}
                     {isLoggedIn && <li onClick={() => navigate("/upload-product")}>Upload Product</li>}
+                    {isLoggedIn && <li onClick={() => navigate('/chats')}>Chats</li>}
                     <li>Settings</li>
                     {isLoggedIn && <li onClick={() => logout()}>Logout</li>}
                   </ul>
@@ -146,6 +147,9 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; }> = ({ 
             </a>
             <NavLink href="#" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
               About
+            </NavLink>
+            <NavLink href="/chats" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+              Chats
             </NavLink>
             {isLoggedIn && (
               <NavLink href="upload-product" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
