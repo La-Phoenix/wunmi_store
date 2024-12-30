@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import "./ProfilePage.css";
 import axios from 'axios';
 import { API_BASE_URL } from '../Auth/Auth';
-import { useAuth } from '../Route/Route';
+import { useAuth } from '../../Route/Route';
 
 export interface Product {
   _id: string;
@@ -11,6 +11,9 @@ export interface Product {
   category: string;
   price: number;
   imageUrl: string;
+  inStock?: boolean;
+  name?: string;
+  description?: string;
 }
 
 export interface User {

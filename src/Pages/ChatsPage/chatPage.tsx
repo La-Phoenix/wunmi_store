@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../Route/Route';
+import { useAuth } from '../../Route/Route';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../Auth/Auth';
 
@@ -37,14 +37,17 @@ const ChatsPage: React.FC = () => {
   }, [token]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100 hero">
       {/* Header */}
-      <header className="bg-blue-600 text-white py-4 px-6 shadow-md">
-        <h1 className="text-xl font-semibold">Your Chats</h1>
+      <header className="bg-blue-600 text-white py-4 px-6 shadow-md flex items-center">
+        <Link to="/" className="flex-shrink-0 mr-4">
+          <h1 className="text-xl font-semibold text-white">Home</h1>
+        </Link>
+        <h1 className="text-xl font-semibold flex-grow text-center">Your Chats</h1>
       </header>
 
       {/* Chats List */}
-      <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+      <main className={`flex-1 overflow-y-auto p-4 space-y-4 ${chats.length === 0 && "flex justify-center items-center"}`}>
         {loading ? (
           <p>Loading chats...</p>
         ) : chats.length > 0 ? (
@@ -66,7 +69,7 @@ const ChatsPage: React.FC = () => {
             </Link>
           ))
         ) : (
-          <p className="text-center text-gray-600">No chats available.</p>
+          <strong><p className="text-center text-gray-600 text-3xl">No chats available.</p></strong>
         )}
       </main>
     </div>

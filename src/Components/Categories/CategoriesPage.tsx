@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_BASE_URL } from '../Auth/Auth';
-import { ProductCard } from '../Home/HomePage';
+import { API_BASE_URL } from '../../Pages/Auth/Auth';
+import { ProductCard } from '../../Pages/Home/HomePage';
 import Navbar from '../Navbar/Navbar';
 import { Footer } from '../Footer/Footer';
+import { Product } from '../../Pages/Profile/ProfilePage';
+import { useAuth } from '../../Route/Route';
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  images: string[];
-  category: { name: string } | string;
-}
 
 const CategoryPage: React.FC = () => {
   const { categoryName } = useParams<{ categoryName: string }>();
@@ -20,6 +15,7 @@ const CategoryPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(() => localStorage.getItem('theme') === 'dark');
   const navigate = useNavigate();
+  const {cartCount, setCartCount} = useAuth();
 
   // Toggle dark mode and save preference to localStorage
   useEffect(() => {
@@ -30,7 +26,7 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       try {
-        const response = await axios.get<Product[]>(`${API_BASE_URL}/products?category=${categoryName}`);
+        const response = await axios.get<Product[]>(`${API_BASE_URL}/products/category/${categoryName}`);
         setProducts(response.data);
       } catch (error) {
         console.log(error);
@@ -40,10 +36,17 @@ const CategoryPage: React.FC = () => {
     fetchCategoryProducts();
   }, [categoryName]);
 
+  const handleAddToCart = (productId: string) => {
+    const updatedCount = cartCount + 1;
+    setCartCount(updatedCount);
+    localStorage.setItem('cartCount', updatedCount.toString());
+    
+  };
+
   return (
     <div className={`min-h-screen transition-all ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Navbar */}
-      <Navbar toggleDarkMode={() => setDarkMode(!darkMode)} darkMode={darkMode} />
+      <Navbar toggleDarkMode={() => setDarkMode(!darkMode)} darkMode={darkMode} cartCount={cartCount} />
 
       {/* Hero Section */}
       <div className={`py-20`}>
@@ -62,9 +65,10 @@ const CategoryPage: React.FC = () => {
             products.map(product => (
               <ProductCard
                 darkMode= {darkMode}
-                key={product.id}
-                product={product as Product & { category: { name: string } }}
-                onAddToCart={() => console.log(`Added product ${product.id} to cart`)}
+                key={product._id}
+                product={product}
+                onAddToCart={handleAddToCart}
+                isClickable = {true}
               />
             ))
           ) : (

@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Heart, Search, Menu, X, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../Route/Route';
-import DarkModeToggle from '../ToggleDarkMode';
+import { useAuth } from '../../Route/Route';
+import DarkModeToggle from '../../ToggleDarkMode';
 import "./Navbar.css"
 
 interface NavLinkProps {
@@ -21,15 +21,16 @@ const NavLink: React.FC<NavLinkProps> = ({ href, children, className = "text-gra
 interface IconButtonProps {
   onClick?: () => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ onClick, children }) => (
-  <button onClick={onClick} className="text-gray-600 hover:text-gray-900">
+const IconButton: React.FC<IconButtonProps> = ({ onClick, children, className = "" }) => (
+  <button onClick={onClick} className={`relative flex items-center justify-center text-gray-600 hover:text-gray-900 ${className}`}>
     {children}
   </button>
 );
 
-const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; }> = ({ toggleDarkMode, darkMode }) => {
+const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCount: number }> = ({ toggleDarkMode, darkMode, cartCount }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const { isLoggedIn, logout } = useAuth();
@@ -91,7 +92,14 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; }> = ({ 
               <Heart size={20} />
             </IconButton>
             <IconButton>
-              <ShoppingCart size={20} />
+              <div className="relative">
+                <ShoppingCart size={20} />
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-1">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
             </IconButton>
             <div className="dropdown-container">
               <IconButton onClick={toggleDropdown}>
@@ -100,11 +108,12 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; }> = ({ 
 
               {/* Dropdown menu */}
               {open && (
-                <div className="dropdown-menu">
+                <div className={`dropdown-menu ${ darkMode ? 'bg-gray-800 dropdown-menu-dark' : '' }` } >
                   <ul>
                     {isLoggedIn && <li onClick={() => navigate("/profile")}>Profile</li>}
                     {isLoggedIn && <li onClick={() => navigate("/upload-product")}>Upload Product</li>}
                     {isLoggedIn && <li onClick={() => navigate('/chats')}>Chats</li>}
+                    {isLoggedIn && <li onClick={() => navigate('/users/with-products/')}>Sellers</li>}
                     <li>Settings</li>
                     {isLoggedIn && <li onClick={() => logout()}>Logout</li>}
                   </ul>

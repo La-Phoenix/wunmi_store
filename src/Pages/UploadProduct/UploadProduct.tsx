@@ -3,12 +3,13 @@ import axios from 'axios';
 import './UploadProduct.css';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../Auth/Auth';
-import { useAuth } from '../Route/Route';
+import { useAuth } from '../../Route/Route';
 
 const UploadProductPage: React.FC = () => {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('Accessories');
+  const [description, setDescription] = useState(''); // New state for description
   const [image, setImage] = useState<File | null>(null);
   const [message, setMessage] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -25,6 +26,7 @@ const UploadProductPage: React.FC = () => {
     if (!price) newErrors.price = 'Price is required';
     else if (isNaN(Number(price)) || Number(price) <= 0) newErrors.price = 'Price must be a positive number';
     if (!category) newErrors.category = 'Category is required';
+    if (!description) newErrors.description = 'Description is required'; // Validate description
     if (!image) newErrors.image = 'Product image is required';
 
     setErrors(newErrors);
@@ -48,6 +50,7 @@ const UploadProductPage: React.FC = () => {
       formData.append('name', productName);
       formData.append('price', price);
       formData.append('category', category);
+      formData.append('description', description); // Add description to the form data
       if (image) formData.append('image', image);
 
       try {
@@ -116,6 +119,19 @@ const UploadProductPage: React.FC = () => {
             {errors.category && <p className="mt-1 text-sm text-red-500">{errors.category}</p>}
           </div>
 
+          {/* Description */}
+          <div>
+            <label className="block text-gray-700 font-medium">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Enter product description"
+              rows={4}
+            />
+            {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
+          </div>
+
           {/* Image Upload */}
           <div>
             <label className="block text-gray-700 font-medium">Product Image</label>
@@ -139,16 +155,16 @@ const UploadProductPage: React.FC = () => {
 
           {/* Submit Button */}
           <button
-              type="submit"
-              className={`w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center`}
-              disabled={isUploading}
-            >
-              {isUploading ? (
-                <div className="button-loader"></div>
-              ) : (
-                "Upload Product"
-              )}
-            </button>
+            type="submit"
+            className={`w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center`}
+            disabled={isUploading}
+          >
+            {isUploading ? (
+              <div className="button-loader"></div>
+            ) : (
+              "Upload Product"
+            )}
+          </button>
           <button
             type="button"
             onClick={() => navigate('/')}

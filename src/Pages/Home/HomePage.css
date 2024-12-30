@@ -1,7 +1,17 @@
 .hero {
-    background-image: url('../assets/imgs/heidi-fin-2TLREZi7BUg-unsplash.jpg');
+    background-image: url('../../assets/imgs/heidi-fin-2TLREZi7BUg-unsplash.jpg');
     background-size: cover;
     background-position: center;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Adjust opacity here */
+    pointer-events: none; /* Ensures it doesn't block interactions */
   }
 
 
@@ -42,6 +52,10 @@
 .dropdown-menu li:hover {
   background-color: #f1f1f1;
   border-radius: 4px;
+}
+
+.dropdown-menu-dark li:hover {
+  background-color: rgb(42 45 50);
 }
 
 /* Optional: add animation for smooth opening */

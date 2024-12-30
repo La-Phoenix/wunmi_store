@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { NavLink } from "../Home/HomePage";
+import { NavLink } from "../../Pages/Home/HomePage";
 import "./Footer.css"
 
 

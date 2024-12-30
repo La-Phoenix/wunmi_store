@@ -1,18 +1,21 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Auth, { FormData } from '../Auth/Auth';
-import HomePage from '../Home/HomePage';
+import Auth, { FormData } from '../Pages/Auth/Auth';
+import HomePage from '../Pages/Home/HomePage';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
-import UploadProductPage from '../UploadProduct/UploadProduct';
-import ProfilePage, { User } from '../Profile/ProfilePage';
-import CategoryPage from '../Categories/CategoriesPage';
-import ResetPassword from '../Forgot-Password/Reset-Password';
-import ForgotPassword from '../Forgot-Password/Forgot-Password';
-import ChatPage from '../Chat/Chat';
-import ChatsPage from '../ChatsPage/chatPage';
+import UploadProductPage from '../Pages/UploadProduct/UploadProduct';
+import ProfilePage, { User } from '../Pages/Profile/ProfilePage';
+import CategoryPage from '../Components/Categories/CategoriesPage';
+import ResetPassword from '../Pages/Forgot-Password/Reset-Password';
+import ForgotPassword from '../Pages/Forgot-Password/Forgot-Password';
+import ChatPage from '../Components/Chat/Chat';
+import ChatsPage from '../Pages/ChatsPage/chatPage';
+import UsersWithProductsPage from '../Pages/UsersWithProductPage/UsersWithProductPage';
+import ProductPage from '../Components/Product/ProductPage';
+import CartPage from '../Pages/CartPage/CartPage';
 
 // Import your components
 // interface User {
@@ -31,6 +34,8 @@ interface AuthContextType {
   setUser: Dispatch<SetStateAction<User | null>>;
   isLoading: boolean;
   token: string | undefined;
+  cartCount: number;
+  setCartCount: Dispatch<SetStateAction<number>>;
 }
 
 // Create AuthContext
@@ -43,9 +48,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-
+  const [cartCount, setCartCount] = useState<number>(() => {
+    // Load initial value from localStorage or default to 0
+    const savedCount = localStorage.getItem('cartCount');
+    return savedCount ? parseInt(savedCount, 10) : 0;
+  });
   
-  const login = async (endpoint: string, payload: FormData) => {
+  const login = async (endpoint: string, payload: FormData) => {setCartCount
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, payload);
@@ -100,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading, token, setUser}}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading, token, setUser, cartCount,  setCartCount}}>
       {children}
     </AuthContext.Provider>
   );
@@ -217,11 +226,28 @@ const AppRoutes: React.FC = () => {
             element={<RedirectRoute element={<Auth />} redirectPath="/" />}
           />
           {/* Protected routes - Buyer */}
+          
           <Route 
             path="/upload-product"
             element={
               <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
                 <UploadProductPage/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/users/with-products"
+            element={
+              <ProtectedRoute >
+                <UsersWithProductsPage/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/cart"
+            element={
+              <ProtectedRoute >
+                <CartPage/>
               </ProtectedRoute>
             }
           />
@@ -256,6 +282,15 @@ const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute>
                   <CategoryPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path="/category/:categoryName/:productId"
+            element={
+              <ProtectedRoute>
+                <ProductPage/>
               </ProtectedRoute>
             }
           />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import "./Auth.css"
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../Route/Route';
+import { useAuth } from '../../Route/Route';
 export const API_BASE_URL = 'http://localhost:3000/api/v1';
 
 export interface FormData {

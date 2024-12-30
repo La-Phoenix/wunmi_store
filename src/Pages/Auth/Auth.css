@@ -1,11 +1,10 @@
-.upload-container {
-    background-image: url('../assets/imgs/junko-nakase-Q-72wa9-7Dg-unsplash.jpg');
+.auth {
+    background-image: url('../../assets/imgs/mike-petrucci-c9FQyqIECds-unsplash.jpg');
     background-size: cover;
     background-position: center;
-}
+  }
 
-/* ButtonWithLoader.css */
-.button-loader {
+  .spinner {
     border: 2px solid #f3f3f3;
     border-top: 2px solid #3498db;
     border-radius: 50%;
@@ -23,3 +22,4 @@
       transform: rotate(360deg);
     }
   }
+  
