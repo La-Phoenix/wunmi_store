@@ -14,7 +14,7 @@ interface ChatPreview {
 }
 
 const ChatsPage: React.FC = () => {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [chats, setChats] = useState<ChatPreview[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

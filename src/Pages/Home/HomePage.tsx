@@ -3,48 +3,10 @@ import "./HomePage.css";
 import { useAuth } from '../../Route/Route';
 import axios from 'axios';
 import { API_BASE_URL } from '../Auth/Auth';
-import accessories from "../../assets/imgs/martin-de-arriba-uf_IDewI6iQ-unsplash-min.jpg";
-import clothes from "../../assets/imgs/junko-nakase-Q-72wa9-7Dg-unsplash.jpg";
-import elctronics from "../../assets/imgs/josh-calabrese-mZf9BZxyKZE-unsplash.jpg";
-import bags from "../../assets/imgs/arno-senoner-iUvQRvdIhsY-unsplash.jpg";
-import shoes from "../../assets/imgs/jaclyn-moy-ugZxwLQuZec-unsplash.jpg";
 import Navbar from '../../Components/Navbar/Navbar';
 import { Footer } from '../../Components/Footer/Footer';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../Profile/ProfilePage';
-
-const categories = [
-    {
-      id: 1,
-      name: "Accessories",
-      price: 79.99,
-      image: accessories,
-    },
-    {
-      id: 2,
-      name: "Clothes",
-      price: 129.99,
-      image: clothes,
-    },
-    {
-      id: 4,
-      name: "Electronics",
-      price: 199.99,
-      image: elctronics,
-    },
-    {
-      id: 3,
-      name: "Shoes",
-      price: 89.99,
-      image: shoes,
-    },
-    {
-      id: 5,
-      name: "Bags",
-      price: 89.99,
-      image: bags,
-    },
-];
 
 
 
@@ -133,6 +95,8 @@ const HomePage: React.FC = () => {
       try {
         const response = await axios.get<Product[]>(`${API_BASE_URL}/products`);
         setProducts(response.data);
+        console.log(products)
+        console.log(error)
        
          // Group products by category and get the first product's image for each category
          const groupedCategories = response.data.reduce((acc, product) => {
@@ -204,33 +168,6 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Products Grid */}
-      {/* <div className="max-w-7xl mx-auto px-4 py-12" id="preview">
-        <h2 className="text-2xl font-bold mb-8 text-white">Featured Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map(product => (
-            <div
-              key={product._id}
-              className={`rounded-lg shadow-md overflow-hidden transition-shadow ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
-            >
-              <img src={product.imageUrl} alt={product.title} className="w-full h-64 object-cover" />
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{product.title}</h3>
-                <p className="text-sm mb-2">{product.category}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold">${product.price}</span>
-                  <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    onClick={() => console.log(`Added product ${product._id} to cart`)}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
 
       {/* Footer */}
       <Footer />

@@ -12,13 +12,6 @@ export interface FormData {
   confirmPassword?: string;
 }
 
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-}
 
 interface ValidationErrors {
   email?: string;
@@ -39,7 +32,7 @@ const Auth: React.FC = () => {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const {login, logout} = useAuth()
+  const {login} = useAuth()
   const [isGoogleLogin, setGoogleLogin] = useState<boolean>(false);
 
   const validateForm = (): boolean => {

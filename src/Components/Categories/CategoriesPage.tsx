@@ -15,7 +15,7 @@ const CategoryPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(() => localStorage.getItem('theme') === 'dark');
   const navigate = useNavigate();
-  const {cartCount, setCartCount, handleAddToCart} = useAuth();
+  const {cartCount, handleAddToCart} = useAuth();
 
   // Toggle dark mode and save preference to localStorage
   useEffect(() => {

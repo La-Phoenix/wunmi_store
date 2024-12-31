@@ -62,6 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
   const handleAddToCart = (productId: string) => {
+    console.log(productId)
     const updatedCount = cartCount + 1;
     setCartCount(updatedCount);
     localStorage.setItem('cartCount', updatedCount.toString());
@@ -71,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (endpoint: string, payload: FormData) => {setCartCount
     try {
       setIsLoading(true);
-      const response = await axios.post(endpoint, payload);
+      await axios.post(endpoint, payload);
       setIsLoggedIn(true)
       navigate('/');
     } catch (error) {
@@ -146,8 +147,8 @@ interface ProtectedRouteProps {
   roles?: Array<'buyer' | 'seller' | 'admin'>;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
-  const { user, isLoading } = useAuth();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const { isLoading } = useAuth();
   const location = useLocation();
   const {isLoggedIn} = useAuth();
 
@@ -369,8 +370,6 @@ const AppRoutes: React.FC = () => {
 
 // Placeholder components (replace with your actual components)
 const ProductListPage: React.FC = () => <div>Product List Page</div>;
-const DashboardPage: React.FC = () => <div>Dashboard Page</div>;
-const OrdersPage: React.FC = () => <div>Orders Page</div>;
 const SellerProductsPage: React.FC = () => <div>Seller Products Page</div>;
 const SellerOrdersPage: React.FC = () => <div>Seller Orders Page</div>;
 const AdminUsersPage: React.FC = () => <div>Admin Users Page</div>;

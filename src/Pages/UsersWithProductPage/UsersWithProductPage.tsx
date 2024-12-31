@@ -8,12 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 const UsersWithProductsPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const {token, user} = useAuth();
+  const {token, user, darkMode} = useAuth();
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(() => {
-      // Load saved theme from localStorage if available
-      return localStorage.getItem('theme') === 'dark';
-    });
 
   useEffect(() => {
     const fetchUsers = async () => {

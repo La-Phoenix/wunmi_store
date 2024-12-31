@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Filter } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Filter } from 'lucide-react';
 import { API_BASE_URL } from '../Auth/Auth';
 import axios from 'axios';
 import { useAuth } from '../../Route/Route';
@@ -12,7 +11,6 @@ const SearchPage: React.FC = () => {
   const [filters, setFilters] = useState({ category: '', priceRange: [0, 1000] });
   const [searchResults, setSearchResults] = useState<Product[]>([]); // Replace with actual result type
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const {token} = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +18,8 @@ const SearchPage: React.FC = () => {
 
   const handleSearch = async () => {
     setLoading(true);
+    console.log(isLoading)
+    console.log(error)
     try {
       console.log(query)
       console.log(filters)
@@ -46,7 +46,6 @@ const SearchPage: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get<Product[]>(`${API_BASE_URL}/products`);
-        const products = response.data;
        
          // Group products by category and get the first product's image for each category
          const groupedCategories = response.data.reduce((acc, product) => {
