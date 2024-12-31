@@ -85,21 +85,25 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
           <div className="hidden md:flex items-center space-x-6">
             {/* Theme Toggle Button */}
             <DarkModeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            <IconButton>
+            <IconButton onClick={() => navigate("/search")}>
               <Search size={20} />
             </IconButton>
             <IconButton>
               <Heart size={20} />
             </IconButton>
-            <IconButton>
-              <div className="relative">
+            <IconButton onClick={() => navigate("/cart")}>
+              {isLoggedIn ? (
+                <div className="relative">
+                  <ShoppingCart size={20}/>
+                  {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-1">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+              ) : (
                 <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-1">
-                    {cartCount}
-                  </span>
-                )}
-              </div>
+              )}
             </IconButton>
             <div className="dropdown-container">
               <IconButton onClick={toggleDropdown}>

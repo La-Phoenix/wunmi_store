@@ -15,7 +15,7 @@ const CategoryPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(() => localStorage.getItem('theme') === 'dark');
   const navigate = useNavigate();
-  const {cartCount, setCartCount} = useAuth();
+  const {cartCount, setCartCount, handleAddToCart} = useAuth();
 
   // Toggle dark mode and save preference to localStorage
   useEffect(() => {
@@ -36,12 +36,7 @@ const CategoryPage: React.FC = () => {
     fetchCategoryProducts();
   }, [categoryName]);
 
-  const handleAddToCart = (productId: string) => {
-    const updatedCount = cartCount + 1;
-    setCartCount(updatedCount);
-    localStorage.setItem('cartCount', updatedCount.toString());
-    
-  };
+  
 
   return (
     <div className={`min-h-screen transition-all ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>

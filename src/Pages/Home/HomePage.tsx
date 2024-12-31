@@ -91,17 +91,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
           {isClickable && (
             <button
               onClick={() => navigate(product._id)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-blue-600 text-white px-4 py-3 rounded hover:bg-blue-700"
             >
               View Item
             </button>
           )}
-          <button 
-            onClick={() => onAddToCart(product._id)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Add to Cart
-          </button>
+          <button
+              className={` px-4 py-3 text-white font-semibold rounded ${
+                product?.inStock
+                  ? 'bg-blue-600 hover:bg-blue-700'
+                  : 'bg-gray-400 cursor-not-allowed'
+              }`}
+              onClick={product?.inStock ? () => onAddToCart(product!._id) : undefined}
+            >
+              {product?.inStock ? 'Add to Cart' : 'Out Of Stock'}
+            </button>
       </div>
     </div>
   </div>
@@ -122,17 +126,7 @@ const HomePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   
-  const { cartCount, setIsLoading } = useAuth();
-
-  const [darkMode, setDarkMode] = useState(() => {
-    // Load saved theme from localStorage if available
-    return localStorage.getItem('theme') === 'dark';
-  });
-
-  useEffect(() => {
-    document.body.classList.toggle('dark', darkMode);
-    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
+  const { cartCount, setIsLoading, darkMode, setDarkMode } = useAuth();
 
   useEffect(() => {
     const fetchProducts = async () => {

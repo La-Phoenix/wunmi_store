@@ -16,14 +16,7 @@ import ChatsPage from '../Pages/ChatsPage/chatPage';
 import UsersWithProductsPage from '../Pages/UsersWithProductPage/UsersWithProductPage';
 import ProductPage from '../Components/Product/ProductPage';
 import CartPage from '../Pages/CartPage/CartPage';
-
-// Import your components
-// interface User {
-//   id: string;
-//   name: string;
-//   email: string;
-//   role: 'buyer' | 'seller' | 'admin';
-// }
+import SearchPage from '../Pages/SearchPage/SearchPage';
 
 interface AuthContextType {
   user: User | null;
@@ -36,6 +29,9 @@ interface AuthContextType {
   token: string | undefined;
   cartCount: number;
   setCartCount: Dispatch<SetStateAction<number>>;
+  handleAddToCart: (productId: string) => void;
+  darkMode: boolean;
+  setDarkMode: Dispatch<SetStateAction<boolean>>;
 }
 
 // Create AuthContext
@@ -53,6 +49,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedCount = localStorage.getItem('cartCount');
     return savedCount ? parseInt(savedCount, 10) : 0;
   });
+
+  const [darkMode, setDarkMode] = useState(() => {
+    // Load saved theme from localStorage if available
+    return localStorage.getItem('theme') === 'dark';
+  });
+
+  useEffect(() => {
+    document.body.classList.toggle('dark', darkMode);
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+
+  const handleAddToCart = (productId: string) => {
+    const updatedCount = cartCount + 1;
+    setCartCount(updatedCount);
+    localStorage.setItem('cartCount', updatedCount.toString());
+    
+  };
   
   const login = async (endpoint: string, payload: FormData) => {setCartCount
     try {
@@ -109,7 +123,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, setIsLoading, token, setUser, cartCount,  setCartCount}}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading , isLoggedIn, 
+    setIsLoading, token, setUser, cartCount,  setCartCount, handleAddToCart,
+    darkMode, setDarkMode}}>
       {children}
     </AuthContext.Provider>
   );
@@ -295,12 +311,10 @@ const AppRoutes: React.FC = () => {
             }
           />
           <Route
-            path="/orders"
+            path="/search"
             element={
-              <ProtectedRoute roles={['buyer']}>
-                <DashboardLayout>
-                  <OrdersPage />
-                </DashboardLayout>
+              <ProtectedRoute >
+                  <SearchPage />
               </ProtectedRoute>
             }
           />
