@@ -361,7 +361,7 @@ const AppRoutes: React.FC = () => {
 
           {/* Error routes */}
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<HomePage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
