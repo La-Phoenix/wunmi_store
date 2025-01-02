@@ -228,19 +228,20 @@ const ChatPageWrapper: React.FC = () => {
 // App Routes
 const AppRoutes: React.FC = () => {
 
-  const Redirect = () =>{ 
-    const { isLoggedIn } = useAuth();
-    if (isLoggedIn) {
-      return <Navigate to="/" replace />;
-    }
-    return <Auth />;
-  }
+  // const Redirect = () =>{ 
+  //   const { isLoggedIn } = useAuth();
+  //   if (isLoggedIn) {
+  //     return <Navigate to="/" replace />;
+  //   }
+  //   return <Auth />;
+  // }
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/products" element={<MainLayout><ProductListPage /></MainLayout>} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -248,7 +249,7 @@ const AppRoutes: React.FC = () => {
           {/* Redirect to homepage if logged in */}
           <Route
             path="/auth"
-            element={<RedirectRoute element={<Auth />} redirectPath="/" />}
+            element={<RedirectRoute element={<Auth />} redirectPath="/home" />}
           />
           {/* Protected routes - Buyer */}
           
@@ -369,7 +370,7 @@ const AppRoutes: React.FC = () => {
 
           {/* Error routes */}
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
-          <Route path="*" element={<Redirect/>} />
+          <Route path="*" element={<NotFoundPage/>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
@@ -385,6 +386,6 @@ const AdminProductsPage: React.FC = () => <div>Admin Products Page</div>;
 const AdminOrdersPage: React.FC = () => <div>Admin Orders Page</div>;
 const AdminSettingsPage: React.FC = () => <div>Admin Settings Page</div>;
 const UnauthorizedPage: React.FC = () => <div>Unauthorized Page</div>;
-// const NotFoundPage: React.FC = () => <div>404 - Page Not Found</div>;
+const NotFoundPage: React.FC = () => <div>404 - Page Not Found</div>;
 
 export default AppRoutes;

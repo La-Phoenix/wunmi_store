@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../Auth/Auth';
+import { Link } from 'react-router-dom';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -43,7 +44,7 @@ export default function ResetPassword() {
         {success ? (
           <div className="text-green-600 text-center">
             <p>Your password has been reset successfully.</p>
-            <a href="/auth" className="text-blue-600 underline mt-4 block">Go to Login</a>
+            <Link to="/auth" className="text-blue-600 underline mt-4 block">Go to Login</Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">

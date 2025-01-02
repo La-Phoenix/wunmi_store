@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Route/Route';
 import DarkModeToggle from '../../ToggleDarkMode';
 import "./Navbar.css"
+import { Link } from 'react-router-dom';
 
 interface NavLinkProps {
   href: string;
@@ -78,7 +79,7 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
               Categories
             </a>
             <NavLink href="#">About</NavLink>
-            {!isLoggedIn && <NavLink href="/auth">Login</NavLink>}
+            {!isLoggedIn && <Link className="cursor-pointer text-gray-600 hover:text-gray-900" to="/auth">Login</Link>}
           </div>
 
           {/* Icons */}
