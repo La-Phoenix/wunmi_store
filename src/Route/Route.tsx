@@ -229,11 +229,11 @@ const ChatPageWrapper: React.FC = () => {
 const AppRoutes: React.FC = () => {
 
   const Redirect = () =>{ 
-    const { isLoggedIn } = useAuth();
-    if (isLoggedIn) {
-      return <Navigate to="/home" replace />;
-    }
-    return <Auth />;
+    // const { isLoggedIn } = useAuth();
+    // if (isLoggedIn) {
+    return <Navigate to="/home" replace />;
+    // }
+    // return <Auth />;
   }
   return (
     <BrowserRouter>
