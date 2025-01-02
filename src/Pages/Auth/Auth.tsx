@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Route/Route';
 export const API_BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://wunmi-commerce-server-git-main-laphoenixs-projects.vercel.app/api/v1'
+    ? 'https://wunmi-commerce-server.vercel.app/api/v1/api/v1'
     : 'http://localhost:3000/api/v1';
 
 export interface FormData {

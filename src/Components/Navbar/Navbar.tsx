@@ -49,7 +49,7 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="logo">
-            <span className="logo-primary">Wunmi</span><span className="logo-secondary">store</span>
+            <span className="logo-primary">WAhavah</span><span className="logo-secondary">Stores</span>
         </div>
 
 
