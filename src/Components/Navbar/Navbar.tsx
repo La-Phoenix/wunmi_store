@@ -159,18 +159,21 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
             >
               Categories
             </a>
-            <NavLink href="#" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
-              About
+            <NavLink href="/users/with-products/" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+              Sellers
             </NavLink>
-            <NavLink href="/chats" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+            <NavLink href="/cart" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+              Cart
+            </NavLink>
+            <Link to="/chats" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
               Chats
-            </NavLink>
+            </Link>
             {isLoggedIn && (
-              <NavLink href="upload-product" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+              <Link to="/upload-product" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
                 Upload Product
-              </NavLink>
+              </Link>
             )}
-            {!isLoggedIn && <NavLink href="/auth">Login</NavLink>}
+            {!isLoggedIn && <Link className="cursor-pointer text-gray-600 hover:text-gray-900" to="/auth">Login</Link>}
           </div>
         </div>
       )}

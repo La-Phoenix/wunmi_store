@@ -7,6 +7,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import { Footer } from '../../Components/Footer/Footer';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../Profile/ProfilePage';
+import { Link } from 'react-router-dom';
 
 
 
@@ -160,9 +161,9 @@ const HomePage: React.FC = () => {
             >
               <h3 className="text-lg font-semibold p-4">{category.name}</h3>
               <img src={category.imageUrl} alt={category.name} className="w-full h-64 object-cover" />
-              <NavLink href={`/category/${category.name}`} className="block px-4 py-2 text-blue-600 hover:text-blue-700">
+              <Link to={`/category/${category.name}`} className="block px-4 py-2 text-blue-600 hover:text-blue-700">
                 View Products
-              </NavLink>
+              </Link>
             </div>
           ))}
         </div>
