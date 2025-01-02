@@ -386,6 +386,6 @@ const AdminProductsPage: React.FC = () => <div>Admin Products Page</div>;
 const AdminOrdersPage: React.FC = () => <div>Admin Orders Page</div>;
 const AdminSettingsPage: React.FC = () => <div>Admin Settings Page</div>;
 const UnauthorizedPage: React.FC = () => <div>Unauthorized Page</div>;
-const NotFoundPage: React.FC = () => <div>404 - Page Not Found</div>;
+// const NotFoundPage: React.FC = () => <div>404 - Page Not Found</div>;
 
 export default AppRoutes;
