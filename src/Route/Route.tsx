@@ -228,13 +228,13 @@ const ChatPageWrapper: React.FC = () => {
 // App Routes
 const AppRoutes: React.FC = () => {
 
-  // const Redirect = () =>{ 
-  //   const { isLoggedIn } = useAuth();
-  //   if (isLoggedIn) {
-  //     return <Navigate to="/" replace />;
-  //   }
-  //   return <Auth />;
-  // }
+  const Redirect = () =>{ 
+    const { isLoggedIn } = useAuth();
+    if (isLoggedIn) {
+      return <Navigate to="/home" replace />;
+    }
+    return <Auth />;
+  }
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -370,7 +370,7 @@ const AppRoutes: React.FC = () => {
 
           {/* Error routes */}
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
-          <Route path="*" element={<NotFoundPage/>} />
+          <Route path="*" element={<Redirect/>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
