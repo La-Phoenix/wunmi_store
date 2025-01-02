@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { BASE_URL } from '../../Pages/Auth/Auth';
 
 interface Message {
   senderId: string;
@@ -20,7 +21,7 @@ const MessageComponent: React.FC<Props> = ({ buyerId, sellerId, jwtToken }) => {
   const [socket, setSocket] = useState<any>(null);
 
   useEffect(() => {
-    const socketInstance = io('http://localhost:3000', {
+    const socketInstance = io(BASE_URL, {
       auth: { token: jwtToken },
     });
 

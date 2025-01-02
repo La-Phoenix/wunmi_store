@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '../../Route/Route';
-import { API_BASE_URL } from '../../Pages/Auth/Auth';
+import { API_BASE_URL, BASE_URL } from '../../Pages/Auth/Auth';
 import { User } from '../../Pages/Profile/ProfilePage';
 import axios from 'axios';
 import { Send, MoreVertical } from 'lucide-react';
@@ -51,7 +51,7 @@ const ChatPage: React.FC<Props> = ({ senderId, receiverId }) => {
     };
 
     fetchOtherUser();
-    const socketInstance = io('http://localhost:3000', {
+    const socketInstance = io(BASE_URL, {
       auth: { token: token },
     });
 

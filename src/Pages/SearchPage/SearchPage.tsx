@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Filter } from 'lucide-react';
-import { API_BASE_URL } from '../Auth/Auth';
+import { API_BASE_URL, FRONTEND_BASE_URL } from '../Auth/Auth';
 import axios from 'axios';
 import { useAuth } from '../../Route/Route';
 import { Product } from '../Profile/ProfilePage';
@@ -78,7 +78,7 @@ const SearchPage: React.FC = () => {
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-8 flex flex-col items-center hero">
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6 space-y-6">
       <button
-        onClick={() => window.location.href = `http://localhost:5173/`}
+        onClick={() => window.location.href =`${FRONTEND_BASE_URL}/`}
         className="ml-4 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
         >
         Home
@@ -158,7 +158,7 @@ const SearchPage: React.FC = () => {
                   <div className="mt-4">
                     <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">${product.price}</span>
                     <button
-                      onClick={() => window.location.href = `http://localhost:5173/category/Accessories/${product._id}`}
+                      onClick={() => window.location.href = `${FRONTEND_BASE_URL}/category/Accessories/${product._id}`}
                       className="ml-4 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
                     >
                       View Details
