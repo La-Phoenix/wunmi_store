@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ShoppingCart, Heart, Search, Menu, X, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Route/Route';
@@ -37,10 +37,32 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+
   // Toggle dropdown visibility
   const toggleDropdown = () => {
     setOpen(!open);
   };
+
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav  className ={`backdrop-blur-md shadow-lg fixed top-0 w-full z-10 '${
@@ -113,7 +135,7 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
 
               {/* Dropdown menu */}
               {open && (
-                <div className={`dropdown-menu ${ darkMode ? 'bg-gray-800 dropdown-menu-dark' : '' }` } >
+                <div ref={dropdownRef} className={`dropdown-menu ${ darkMode ? 'bg-gray-800 dropdown-menu-dark' : '' }` } >
                   <ul>
                     {isLoggedIn && <li onClick={() => navigate("/profile")}>Profile</li>}
                     {isLoggedIn && <li onClick={() => navigate("/upload-product")}>Upload Product</li>}
@@ -128,7 +150,7 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div ref={sidebarRef} className="md:hidden">
             <IconButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </IconButton>
@@ -159,10 +181,10 @@ const Navbar: React.FC<{ toggleDarkMode: () => void; darkMode: boolean; cartCoun
             >
               Categories
             </a>
-            <Link href="/users/with-products/" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+            <Link to="/users/with-products/" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
               Sellers
             </Link>
-            <Link href="/cart" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
+            <Link to="/cart" className="block px-3 py-2 text-gray-600 hover:text-gray-900">
               Cart
             </Link>
             <Link to="/chats" className="block px-3 py-2 text-gray-600 hover:text-gray-900">

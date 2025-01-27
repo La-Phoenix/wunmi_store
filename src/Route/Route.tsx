@@ -17,6 +17,7 @@ import UsersWithProductsPage from '../Pages/UsersWithProductPage/UsersWithProduc
 import ProductPage from '../Components/Product/ProductPage';
 import CartPage from '../Pages/CartPage/CartPage';
 import SearchPage from '../Pages/SearchPage/SearchPage';
+import AdminDashboard from '../Pages/Admin/AdminDashboard';
 
 interface AuthContextType {
   user: User | null;
@@ -251,6 +252,18 @@ const AppRoutes: React.FC = () => {
             path="/auth"
             element={<RedirectRoute element={<Auth />} redirectPath="/home" />}
           />
+
+          {/* Admin dashboard */}
+          <Route 
+            path="/admin"
+            element={
+              <ProtectedRoute roles={['buyer', 'seller', 'admin']}>
+                <AdminDashboard/>
+              </ProtectedRoute>
+            }
+          />
+
+
           {/* Protected routes - Buyer */}
           
           <Route 
@@ -351,23 +364,6 @@ const AppRoutes: React.FC = () => {
             }
           />
 
-          {/* Admin routes */}
-          <Route
-            path="/admin/*"
-            element={
-              <ProtectedRoute roles={['admin']}>
-                <DashboardLayout>
-                  <Routes>
-                    <Route path="users" element={<AdminUsersPage />} />
-                    <Route path="products" element={<AdminProductsPage />} />
-                    <Route path="orders" element={<AdminOrdersPage />} />
-                    <Route path="settings" element={<AdminSettingsPage />} />
-                  </Routes>
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-
           {/* Error routes */}
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="*" element={<Redirect/>} />
@@ -381,10 +377,6 @@ const AppRoutes: React.FC = () => {
 const ProductListPage: React.FC = () => <div>Product List Page</div>;
 const SellerProductsPage: React.FC = () => <div>Seller Products Page</div>;
 const SellerOrdersPage: React.FC = () => <div>Seller Orders Page</div>;
-const AdminUsersPage: React.FC = () => <div>Admin Users Page</div>;
-const AdminProductsPage: React.FC = () => <div>Admin Products Page</div>;
-const AdminOrdersPage: React.FC = () => <div>Admin Orders Page</div>;
-const AdminSettingsPage: React.FC = () => <div>Admin Settings Page</div>;
 const UnauthorizedPage: React.FC = () => <div>Unauthorized Page</div>;
 // const NotFoundPage: React.FC = () => <div>404 - Page Not Found</div>;
 
