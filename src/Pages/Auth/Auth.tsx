@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Route/Route';
 export const API_BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://wunmi-commerce-server.vercel.app/api/v1'
+    ? '/api' //Since the frontend and backend are on the same server(vercel rewrite)
     : 'http://localhost:3000/api/v1';
 export const BASE_URL =
   process.env.NODE_ENV === 'production'
