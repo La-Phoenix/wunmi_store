@@ -13,7 +13,7 @@ export const BASE_URL =
     : 'http://localhost:3000';
 export const FRONTEND_BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://la-phoenix.github.io/wunmi_store'
+    ? 'https://wunmi-store.vercel.app'
     : 'http://localhost:5173';
 
 export interface FormData {
@@ -291,6 +291,7 @@ const Auth: React.FC = () => {
             )}
           </button>
 
+          {/* Google OAuth Button */}
           <button
             onClick={handleSuccess}
             className="flex items-center justify-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50"

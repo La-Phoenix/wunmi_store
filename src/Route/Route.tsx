@@ -86,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const fetchUserData = async () => {
       const token = Cookies.get('token');
+      console.log(token)
       if (token) {
         setToken(token);
         try {
@@ -93,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           // Decode the JWT to get user information
           const decodedToken = jwtDecode(token);
+          console.log(decodedToken)
           const currentTime = Date.now() / 1000;
 
           
